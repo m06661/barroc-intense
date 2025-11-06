@@ -1,2 +1,0 @@
-# barroc-intense
-barroc intense
