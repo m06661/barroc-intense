@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
 
 
 Route::get('/', function () {
@@ -20,7 +21,10 @@ Route::middleware('auth')->get('/contact', function () {
     return view('contact');
 })->name('contact');
 
-
+//order routes
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 
 
 require __DIR__.'/auth.php';
