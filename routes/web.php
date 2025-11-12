@@ -6,6 +6,7 @@ use App\Http\Controllers\LeaseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController; // Voeg CategoryController toe
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\OrderController;
 
 /*
 |--------------------------------------------------------------------------
@@ -44,6 +45,10 @@ Route::middleware('auth')->get('/contact', function () {
     return view('contact');
 })->name('contact');
 
+//order routes
+Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
+Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
+Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
 // ------------------------------
 // Lease Management Routes alvast
 // ------------------------------
