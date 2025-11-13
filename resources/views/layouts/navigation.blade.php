@@ -19,6 +19,12 @@
                 <!-- Links voor ingelogde gebruikers -->
                 <a href="{{ route('index') }}" class="text-white">Home</a>
 
+                <a href="{{ url('/customers') }}" class="text-white">Customers</a>
+
+
+                <a href="{{ route('orders.index') }}" class="text-white">Orders</a>
+
+
                 <!-- Dit moet later specifiek voor de juiste users worden -->
                 <a href="{{ route('dashboard') }}" class="text-white">Dashboard</a>
 
