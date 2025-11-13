@@ -6,7 +6,7 @@ use App\Http\Controllers\LeaseController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController; // Voeg CategoryController toe
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\OrderController;]
+use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerDocumentController;
 use App\Models\Customer;
 
