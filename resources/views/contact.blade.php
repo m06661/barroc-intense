@@ -4,6 +4,24 @@
 
 @section('content')
     <div class="min-h-screen flex flex-col items-center justify-center py-12 px-6 lg:px-8" style="background-color: #FFFBEA;">
+        <!-- Success Message Display -->
+        @if(session('success'))
+            <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4 w-full max-w-3xl" role="alert">
+                <span class="block sm:inline">{{ session('success') }}</span>
+            </div>
+        @endif
+
+        <!-- Validation Errors Display -->
+        @if ($errors->any())
+            <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4 w-full max-w-3xl">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+            </div>
+        @endif
+
         <!-- Titel -->
         <div class="text-center mb-6">
             <h1 class="text-4xl font-extrabold text-gray-900">Neem Contact Op</h1>
@@ -23,25 +41,29 @@
 
         <!-- Contactformulier -->
         <div class="bg-white rounded-lg shadow-md p-8 w-full max-w-3xl">
-            <form method="POST" action="#">
+            <!-- *** VERANDERD HIER: ACTION ATTRIBUTE *** -->
+            <form method="POST" action="{{ route('contact.store') }}">
                 @csrf
 
                 <!-- Naam -->
                 <div class="mb-4">
                     <label for="name" class="block text-gray-700 font-semibold mb-2">Naam</label>
-                    <input type="text" id="name" name="name" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" placeholder="Jouw naam" required>
+                    {{-- Added 'value="{{ old('name') }}"' to keep input after validation error --}}
+                    <input type="text" id="name" name="name" value="{{ old('name') }}" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" placeholder="Jouw naam" required>
                 </div>
 
                 <!-- Email -->
                 <div class="mb-4">
                     <label for="email" class="block text-gray-700 font-semibold mb-2">Email</label>
-                    <input type="email" id="email" name="email" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" placeholder="Jouw emailadres" required>
+                    {{-- Added 'value="{{ old('email') }}"' to keep input after validation error --}}
+                    <input type="email" id="email" name="email" value="{{ old('email') }}" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" placeholder="Jouw emailadres" required>
                 </div>
 
                 <!-- Bericht -->
                 <div class="mb-6">
                     <label for="message" class="block text-gray-700 font-semibold mb-2">Bericht</label>
-                    <textarea id="message" name="message" rows="5" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" placeholder="Typ hier je bericht" required></textarea>
+                    {{-- Added 'old('message')' inside textarea to keep input after validation error --}}
+                    <textarea id="message" name="message" rows="5" class="block w-full border-gray-300 rounded-md shadow-sm focus:ring-yellow-500 focus:border-yellow-500" placeholder="Typ hier je bericht" required>{{ old('message') }}</textarea>
                 </div>
 
                 <!-- Verzenden -->

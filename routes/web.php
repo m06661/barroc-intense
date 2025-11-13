@@ -4,8 +4,9 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\LeaseController;
 use App\Http\Controllers\DashboardController;
-use App\Http\Controllers\CategoryController; // Voeg CategoryController toe
+use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\ContactController;
 
 /*
 |--------------------------------------------------------------------------
@@ -28,9 +29,8 @@ Route::get('/', function () {
 // Dashboard Routes
 // ------------------------------
 Route::middleware(['auth', 'verified'])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
+    // Dashboard via controller zodat $products en $categories beschikbaar zijn
+    Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::get('/index', function () {
         return view('index');
@@ -45,7 +45,7 @@ Route::middleware('auth')->get('/contact', function () {
 })->name('contact');
 
 // ------------------------------
-// Lease Management Routes alvast
+// Lease Management Routes
 // ------------------------------
 Route::middleware('auth')->prefix('leases')->name('leases.')->group(function () {
     Route::get('/', [LeaseController::class, 'index'])->name('index');
@@ -57,7 +57,7 @@ Route::middleware('auth')->prefix('leases')->name('leases.')->group(function () 
 });
 
 // ------------------------------
-// Product Management Routes alvast
+// Product Management Routes
 // ------------------------------
 Route::middleware('auth')->prefix('products')->name('products.')->group(function () {
     Route::get('/', [ProductController::class, 'index'])->name('index');
@@ -70,16 +70,16 @@ Route::middleware('auth')->prefix('products')->name('products.')->group(function
 });
 
 // ------------------------------
-// Category Management Routes alvast
+// Category Management Routes
 // ------------------------------
 Route::middleware('auth')->prefix('categories')->name('categories.')->group(function () {
-    Route::get('/', [CategoryController::class, 'index'])->name('index'); // Categorieën overzicht
-    Route::get('/create', [CategoryController::class, 'create'])->name('create'); // Categorie aanmaken
-    Route::post('/', [CategoryController::class, 'store'])->name('store'); // Categorie opslaan
-    Route::get('/{category}', [CategoryController::class, 'show'])->name('show'); // Categorie details
-    Route::get('/{category}/edit', [CategoryController::class, 'edit'])->name('edit'); // Categorie bewerken
-    Route::put('/{category}', [CategoryController::class, 'update'])->name('update'); // Categorie updaten
-    Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy'); // Categorie verwijderen
+    Route::get('/', [CategoryController::class, 'index'])->name('index');
+    Route::get('/create', [CategoryController::class, 'create'])->name('create');
+    Route::post('/', [CategoryController::class, 'store'])->name('store');
+    Route::get('/{category}', [CategoryController::class, 'show'])->name('show');
+    Route::get('/{category}/edit', [CategoryController::class, 'edit'])->name('edit');
+    Route::put('/{category}', [CategoryController::class, 'update'])->name('update');
+    Route::delete('/{category}', [CategoryController::class, 'destroy'])->name('destroy');
 });
 
 // ------------------------------
@@ -90,6 +90,17 @@ Route::middleware('auth')->prefix('profile')->name('profile.')->group(function (
     Route::patch('/', [ProfileController::class, 'update'])->name('update');
     Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
 });
+
+
+Route::middleware('auth')->group(function () {
+    // Route to display the form
+    Route::get('/contact', [ContactController::class, 'show'])->name('contact');
+    // Route to handle the form submission
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+});
+
+
+
 
 // ------------------------------
 // Authentication Routes
