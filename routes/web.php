@@ -7,6 +7,8 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\CategoryController; // Voeg CategoryController toe
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
+use App\Http\Controllers\CustomerDocumentController;
+use App\Models\Customer;
 
 /*
 |--------------------------------------------------------------------------
@@ -49,6 +51,18 @@ Route::middleware('auth')->get('/contact', function () {
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+
+
+Route::prefix('customers/{customer}/documents')->group(function () {
+    Route::get('/', [CustomerDocumentController::class, 'index'])->name('documents.index');
+    Route::post('/', [CustomerDocumentController::class, 'store'])->name('documents.store');
+    Route::delete('/{filename}', [CustomerDocumentController::class, 'destroy'])->name('documents.destroy');
+});
+
+Route::get('/customers', function () {
+    $customers = Customer::all();
+    return view('customers.index', compact('customers'));
+});
 // ------------------------------
 // Lease Management Routes alvast
 // ------------------------------
