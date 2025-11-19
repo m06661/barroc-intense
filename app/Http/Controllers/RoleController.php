@@ -62,7 +62,6 @@ class RoleController extends Controller
 
         return view('roles.assign', compact('users', 'roles'));
     }
-
     public function assignRoles(Request $request, User $user)
     {
         $request->validate([
