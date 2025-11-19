@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerDocumentController;
 use App\Models\Customer;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\RoleController;
 
 /*
 |--------------------------------------------------------------------------
@@ -46,6 +47,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
 Route::middleware('auth')->get('/contact', function () {
     return view('contact');
 })->name('contact');
+
+// ------------------------------
+// RolePagina
+// ------------------------------
+Route::middleware(['auth', 'role:Admin'])->group(function() {
+    Route::get('/roles/assign', [RoleController::class, 'assignForm'])->name('roles.assign');
+    Route::post('/roles/assign/{user}', [RoleController::class, 'assignRoles'])->name('roles.assign.save');
+});
+
 
 //order routes
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
