@@ -3,10 +3,12 @@
 namespace Database\Seeders;
 
 use App\Models\User;
+use App\Models\Customer;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+
 class DatabaseSeeder extends Seeder
 {
     use WithoutModelEvents;
@@ -18,6 +20,7 @@ class DatabaseSeeder extends Seeder
     {
         User::factory(2)->create();
 
+        Customer::factory()->count(50)->create();
 
         $Admin = User::create([
             'name' => 'Admin',
