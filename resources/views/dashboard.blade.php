@@ -24,18 +24,15 @@
                             <label class="block text-sm font-medium text-gray-700">Naam</label>
                             <input type="text" name="name" class="w-full border-gray-300 rounded p-2" required>
                         </div>
-
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Prijs (€)</label>
                             <input type="number" name="price" step="0.01" class="w-full border-gray-300 rounded p-2" required>
                         </div>
-
                         <div>
                             <label class="block text-sm font-medium text-gray-700">Voorraad</label>
                             <input type="number" name="stock" value="0" class="w-full border-gray-300 rounded p-2" required>
                         </div>
                     </div>
-
                     <div class="mt-4 text-right">
                         <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-lg shadow-md">
                             Product Aanmaken
@@ -58,20 +55,22 @@
                 <tbody>
                 @foreach ($products as $product)
                     <tr class="border-b">
-                        <td class="px-4 py-2">{{ $product->name }}</td>
-                        <td class="px-4 py-2">€{{ number_format($product->price, 2, ',', '.') }}</td>
                         <td class="px-4 py-2">
                             <form action="{{ route('products.update', $product->id) }}" method="POST" class="flex items-center gap-2">
                                 @csrf
                                 @method('PUT')
-                                <input type="number" name="stock" value="{{ $product->stock }}" class="w-20 border-gray-300 rounded p-1">
-                                <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-2 rounded">Opslaan</button>
-                            </form>
+                                <input type="text" name="name" value="{{ $product->name }}" class="w-32 border-gray-300 rounded p-1">
+                        </td>
+                        <td class="px-4 py-2">
+                            <input type="number" name="price" value="{{ $product->price }}" step="0.01" class="w-20 border-gray-300 rounded p-1">
+                        </td>
+                        <td class="px-4 py-2">
+                            <input type="number" name="stock" value="{{ $product->stock }}" class="w-20 border-gray-300 rounded p-1">
                         </td>
                         <td class="px-4 py-2">{{ $product->reservedQuantity() }}</td>
-                        <td class="px-4 py-2">
-                            <a href="{{ route('products.edit', $product->id) }}" class="text-yellow-600 hover:text-yellow-700">Bewerken</a>
-                            |
+                        <td class="px-4 py-2 flex items-center gap-2">
+                            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-2 rounded">Opslaan</button>
+                            </form>
                             <form action="{{ route('products.destroy', $product->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
@@ -94,6 +93,7 @@
         <div class="max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6 mt-12">
             <h2 class="text-2xl font-semibold text-gray-800 mb-4">Categorieën</h2>
 
+            {{-- Nieuwe Categorie --}}
             <div class="bg-gray-100 p-4 rounded-lg mb-6">
                 <h3 class="text-lg font-semibold mb-3">Nieuwe Categorie</h3>
                 <form action="{{ route('categories.store') }}" method="POST">
@@ -116,6 +116,7 @@
                 </form>
             </div>
 
+            <!-- Categorieën Tabel -->
             <table class="min-w-full bg-white border border-gray-300 rounded-md">
                 <thead class="bg-gray-100">
                 <tr>
@@ -127,11 +128,18 @@
                 <tbody>
                 @foreach ($categories as $category)
                     <tr class="border-b">
-                        <td class="px-4 py-2">{{ $category->name }}</td>
-                        <td class="px-4 py-2">{{ $category->description }}</td>
                         <td class="px-4 py-2">
-                            <a href="{{ route('categories.edit', $category->id) }}" class="text-yellow-600 hover:text-yellow-700">Bewerken</a>
-                            |
+                            <form action="{{ route('categories.update', $category->id) }}" method="POST" class="flex items-center gap-2">
+                                @csrf
+                                @method('PUT')
+                                <input type="text" name="name" value="{{ $category->name }}" class="w-32 border-gray-300 rounded p-1">
+                        </td>
+                        <td class="px-4 py-2">
+                            <input type="text" name="description" value="{{ $category->description }}" class="w-full border-gray-300 rounded p-1">
+                        </td>
+                        <td class="px-4 py-2 flex items-center gap-2">
+                            <button type="submit" class="bg-yellow-500 hover:bg-yellow-600 text-white py-1 px-2 rounded">Opslaan</button>
+                            </form>
                             <form action="{{ route('categories.destroy', $category->id) }}" method="POST" class="inline">
                                 @csrf
                                 @method('DELETE')
