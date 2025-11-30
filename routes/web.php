@@ -10,6 +10,8 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerDocumentController;
 use App\Models\Customer;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\SearchController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -118,6 +120,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 });
 
+
+
+// search
+Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 
 

@@ -6,6 +6,21 @@
             <span class="text-white text-2xl font-semibold">Barroc<span class="text-black">Intens.</span></span>
 
         </a>
+        @auth
+            @if(Auth::user()->role === 'Admin')
+                <form action="{{ route('search') }}" method="GET" class="flex items-center ml-4">
+                    <input
+                        type="text"
+                        name="q"
+                        placeholder="Zoeken…"
+                        class="border rounded px-2 py-1 text-sm"
+                    />
+                </form>
+            @endif
+        @endauth
+
+
+
 
         <!-- Navigation Links -->
         <div class="space-x-4">
