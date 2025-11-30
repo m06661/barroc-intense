@@ -14,10 +14,9 @@ class DashboardController extends Controller
      */
     public function index()
     {
-        $products = Product::all();
+        $products = Product::with('orderItems')->get();
         $categories = Category::all();
 
-        // Stuur data naar de view
         return view('dashboard', compact('products', 'categories'));
     }
 

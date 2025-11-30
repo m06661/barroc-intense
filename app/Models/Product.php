@@ -9,10 +9,17 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'sku', 'price', 'minimum_stock'];
+    protected $fillable = ['name', 'sku', 'price', 'minimum_stock', 'stock'];
 
-    public function inventory()
+    // Relatie met OrderItems voor reserveringen
+    public function orderItems()
     {
-        return $this->hasOne(Inventory::class);
+        return $this->hasMany(OrderItem::class);
+    }
+
+    // Bereken totaal gereserveerd
+    public function reservedQuantity()
+    {
+        return $this->orderItems()->sum('quantity');
     }
 }
