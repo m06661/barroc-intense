@@ -39,6 +39,7 @@
 
                 <a href="{{ route('orders.index') }}" class="text-white">Orders</a>
 
+                <a href="{{ route('roles.assign') }}" class="text-white">assign roles</a>
 
                 <!-- Dit moet later specifiek voor de juiste users worden -->
                 <a href="{{ route('dashboard') }}" class="text-white">Dashboard</a>
