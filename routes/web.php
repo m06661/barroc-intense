@@ -126,6 +126,7 @@ Route::middleware('auth')->group(function () {
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
 
+Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 
 // ------------------------------
 // Authentication Routes
