@@ -5,7 +5,8 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use App\Models\User;
 use Spatie\Permission\Models\Role;
-
+use Spatie\Permission\Models\Permission;
+use App\Models\Customer;
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -21,6 +22,7 @@ class DatabaseSeeder extends Seeder
             CustomerSeeder::class,
             OrderSeeder::class,
         ]);
+        Customer::factory()->count(50)->create();
 
         // === ADMIN USER ===
         $Admin = User::create([

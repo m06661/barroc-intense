@@ -1,1 +1,0 @@
-<?php /**PATH C:\Users\merta\Documents\GitHub\barroc-intense\resources\views/components/application-logo.blade.php ENDPATH**/ ?>

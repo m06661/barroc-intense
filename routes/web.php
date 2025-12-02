@@ -11,6 +11,7 @@ use App\Http\Controllers\CustomerDocumentController;
 use App\Models\Customer;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SearchController;
+use App\Http\Controllers\RoleController;
 
 
 /*
@@ -77,6 +78,13 @@ Route::middleware('auth')->prefix('leases')->name('leases.')->group(function () 
     Route::delete('/{lease}', [LeaseController::class, 'destroy'])->name('destroy');
 });
 
+// ------------------------------
+// RolePagina
+// ------------------------------
+Route::middleware(['auth', 'role:Admin'])->group(function() {
+    Route::get('/roles/assign', [RoleController::class, 'assignForm'])->name('roles.assign');
+    Route::post('/roles/assign/{user}', [RoleController::class, 'assignRoles'])->name('roles.assign.save');
+});
 // ------------------------------
 // Product Management Routes
 // ------------------------------
