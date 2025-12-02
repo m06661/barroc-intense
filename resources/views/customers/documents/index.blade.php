@@ -9,7 +9,7 @@
     <div class="text-center mb-10">
         <h1 class="text-4xl font-extrabold text-gray-900">Klantdossier</h1>
         <p class="mt-2 text-gray-700 text-lg">
-            Dossier van <span class="font-semibold">{{ $customer->name }}</span>.
+            Dossier van <span class="font-semibold">{{ $customer->name }}</span>.  
             Upload documenten, bekijk bestanden en controleer ontbrekende gegevens.
         </p>
     </div>
@@ -64,65 +64,60 @@
         <div>
             <h2 class="text-2xl font-semibold text-gray-900 mb-4">Documenten</h2>
 
-            @if(count($files) === 0)
+            @if($files->count() === 0)
                 <p class="text-gray-700">Er zijn nog geen documenten voor deze klant.</p>
             @else
-                <div class="overflow-x-auto">
-                    <table class="min-w-full divide-y divide-gray-200">
-                        <thead class="bg-gray-100">
-                            <tr>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                    Bestand
-                                </th>
-                                <th class="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                    Geüpload op
-                                </th>
-                                <th class="px-6 py-4 text-center text-xs font-semibold text-gray-700 uppercase tracking-wider">
-                                    Acties
-                                </th>
-                            </tr>
-                        </thead>
 
-                        <tbody class="bg-white divide-y divide-gray-100">
-                            @foreach($files as $file)
-                                <tr class="hover:bg-yellow-50 transition-colors">
-                                    <td class="px-6 py-4 text-gray-800 font-medium">
-                                        {{ basename($file) }}
-                                    </td>
+            <div class="overflow-hidden rounded-xl border border-gray-200 shadow">
+                <table class="min-w-full text-left">
+                    <thead class="bg-gray-100 text-gray-700 text-sm uppercase tracking-wide">
+                        <tr>
+                            <th class="px-6 py-4">Bestand</th>
+                            <th class="px-6 py-4">Geüpload op</th>
+                            <th class="px-6 py-4 text-center">Acties</th>
+                        </tr>
+                    </thead>
 
-                                    <td class="px-6 py-4 text-gray-700">
-                                        {{ date('d-m-Y H:i', Storage::disk('public')->lastModified($file)) }}
-                                    </td>
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                        @foreach($files as $file)
+                        <tr class="hover:bg-yellow-50 transition">
+                            <td class="px-6 py-4 font-medium text-gray-800">
+                                {{ $file->filename }}
+                            </td>
 
-                                    <td class="px-6 py-4">
-                                        <div class="flex justify-center gap-3">
+                            <td class="px-6 py-4 text-gray-700">
+                                {{ $file->created_at->format('d-m-Y H:i') }}
+                            </td>
 
-                                            <!-- Download -->
-                                            <a href="{{ asset('storage/'.$file) }}"
-                                               download
-                                               class="inline-block bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition text-sm">
-                                                Download
-                                            </a>
+                            <td class="px-6 py-4 text-center">
+                                <div class="flex justify-center gap-3">
 
-                                            <!-- Verwijderen -->
-                                            <form action="{{ route('documents.destroy', [$customer->id, basename($file)]) }}"
-                                                  method="POST">
-                                                @csrf
-                                                @method('DELETE')
+                                    <!-- Download -->
+                                    <a href="{{ Storage::url($file->path) }}"
+                                       download
+                                       class="bg-green-500 hover:bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition text-sm">
+                                        Download
+                                    </a>
 
-                                                <button
-                                                    class="inline-block bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition text-sm">
-                                                    Verwijderen
-                                                </button>
-                                            </form>
+                                    <!-- Verwijderen -->
+                                    <form method="POST" action="{{ route('documents.destroy', [$customer->id, $file->id]) }}">
+                                        @csrf
+                                        @method('DELETE')
+                                        <button
+                                            class="bg-red-500 hover:bg-red-600 text-white font-semibold py-2 px-4 rounded-lg shadow-sm transition text-sm">
+                                            Verwijderen
+                                        </button>
+                                    </form>
 
-                                        </div>
-                                    </td>
-                                </tr>
-                            @endforeach
-                        </tbody>
-                    </table>
-                </div>
+                                </div>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+
+                </table>
+            </div>
+
             @endif
         </div>
 

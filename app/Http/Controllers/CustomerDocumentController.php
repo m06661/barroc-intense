@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Customer;
+use App\Models\CustomerDocument;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -11,7 +12,7 @@ class CustomerDocumentController extends Controller
     public function index(Customer $customer)
     {
         // Haal documenten op uit storage
-        $files = Storage::disk('public')->files("customers/{$customer->id}");
+        $files = $customer->documents;
 
         // Ontbrekende velden waarschuwingen
         $missing = [];
@@ -27,21 +28,31 @@ class CustomerDocumentController extends Controller
     public function store(Request $request, Customer $customer)
     {
         $request->validate([
-            'document' => 'required|file|max:20480', // 20MB
+            'document' => 'required|file|max:20480',
         ]);
 
         $file = $request->file('document');
-        $name = time() . '_' . $file->getClientOriginalName();
+        $name = time().'_'.$file->getClientOriginalName();
 
-        Storage::disk('public')->putFileAs("customers/{$customer->id}", $file, $name);
+        // Bestand opslaan
+        $path = $file->storeAs("customers/{$customer->id}", $name, 'public');
+
+        // DATABASE opslaan
+        $customer->documents()->create([
+            'filename' => $name,
+            'path' => $path
+        ]);
 
         return back()->with('success', 'Document geupload!');
     }
 
-    public function destroy(Customer $customer, $filename)
+
+    public function destroy(Customer $customer, CustomerDocument $document)
     {
-        Storage::disk('public')->delete("customers/{$customer->id}/{$filename}");
+        Storage::disk('public')->delete($document->path);
+        $document->delete();
 
         return back()->with('success', 'Document verwijderd!');
     }
+
 }

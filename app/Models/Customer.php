@@ -28,4 +28,10 @@ class Customer extends Model
     {
         return $this->hasMany(Feedback::class);
     }
+    
+    public function documents()
+    {
+        return $this->hasMany(CustomerDocument::class);
+    }
+
 }

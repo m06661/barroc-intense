@@ -58,7 +58,7 @@ Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->na
 Route::prefix('customers/{customer}/documents')->group(function () {
     Route::get('/', [CustomerDocumentController::class, 'index'])->name('documents.index');
     Route::post('/', [CustomerDocumentController::class, 'store'])->name('documents.store');
-    Route::delete('/{filename}', [CustomerDocumentController::class, 'destroy'])->name('documents.destroy');
+    Route::delete('/{document}', [CustomerDocumentController::class, 'destroy'])->name('documents.destroy');
 });
 
 Route::get('/customers', function () {
