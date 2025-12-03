@@ -12,6 +12,7 @@ use App\Models\Customer;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\RoleController;
+use App\Http\Controllers\IssueController;
 
 
 /*
@@ -77,6 +78,13 @@ Route::middleware('auth')->prefix('leases')->name('leases.')->group(function () 
     Route::put('/{lease}', [LeaseController::class, 'update'])->name('update');
     Route::delete('/{lease}', [LeaseController::class, 'destroy'])->name('destroy');
 });
+
+// ------------------------------
+// storingPagina
+// ------------------------------
+Route::get('/issues', [IssueController::class, 'index'])->name('issues.index');
+Route::get('/issues/{id}', [IssueController::class, 'show'])->name('issues.show');
+Route::post('/issues/{id}/actions', [IssueController::class, 'addAction'])->name('issues.actions.add');
 
 // ------------------------------
 // RolePagina

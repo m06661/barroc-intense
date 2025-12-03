@@ -36,6 +36,7 @@
 
                 <a href="{{ url('/customers') }}" class="text-white">Customers</a>
 
+                <a href="{{ route('issues.index') }}" class="text-white">Issues</a>
 
                 <a href="{{ route('orders.index') }}" class="text-white">Orders</a>
 
