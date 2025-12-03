@@ -2,10 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Auditable;
 
 class Machine extends Model
 {
+
+    use HasFactory, Auditable;
+
     protected $fillable = [
         'customer_id', 'serial_number', 'type', 'location', 'installed_at', 'status'
     ];

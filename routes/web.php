@@ -13,6 +13,7 @@ use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\IssueController;
+use App\Http\Controllers\AuditLogController;
 
 
 /*
@@ -136,6 +137,10 @@ Route::middleware('auth')->group(function () {
     Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 });
 
+
+Route::get('/auditpage', [\App\Http\Controllers\AuditLogController::class, 'index'])
+    ->middleware(['auth'])
+    ->name('auditpage');
 
 
 // search

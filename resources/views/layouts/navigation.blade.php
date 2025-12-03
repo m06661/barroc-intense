@@ -4,18 +4,14 @@
         <a href="/index" class="flex items-center">
             <img src="{{ asset('images/logo5_klein.png') }}" alt="Barroc Intens Logo" class="h-8 mr-2"> <!-- Voeg het logo toe -->
             <span class="text-white text-2xl font-semibold">Barroc<span class="text-black">Intens.</span></span>
-
         </a>
         @auth
-            @if(Auth::user()->role === 'Admin')
-                <form action="{{ route('search') }}" method="GET" class="flex items-center ml-4">
-                    <input
-                        type="text"
-                        name="q"
-                        placeholder="Zoeken…"
-                        class="border rounded px-2 py-1 text-sm"
-                    />
-                </form>
+            @if(Auth::user()->name === 'Admin')
+                <div>
+                    <input type="text" name="search" value="{{ request('search') }}"
+                           class="w-full border-gray-300 rounded p-2"
+                           placeholder="Search...">
+                </div>
             @endif
         @endauth
 
@@ -50,6 +46,8 @@
                 <a href="{{ route('leases.index') }}" class="text-white">Leases</a>
 
                 <a href="{{ route('contact') }}" class="text-white">Contact</a>
+
+                <a href="{{ route('auditpage') }}" class="text-white">auditpage</a>
 
                 <!-- Logout Form -->
                 <form method="POST" action="{{ route('logout') }}" class="inline">

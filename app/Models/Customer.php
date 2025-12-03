@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Auditable;
 
 class Customer extends Model
 {
-    use HasFactory;
+
+    use HasFactory, Auditable;
 
     protected $fillable = [
         'name', 'address', 'contact_person', 'email', 'phone', 'iban',
@@ -28,7 +30,7 @@ class Customer extends Model
     {
         return $this->hasMany(Feedback::class);
     }
-    
+
     public function documents()
     {
         return $this->hasMany(CustomerDocument::class);

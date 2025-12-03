@@ -4,10 +4,12 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use App\Traits\Auditable;
 
 class Schedule extends Model
 {
-    use HasFactory;
+
+    use HasFactory, Auditable;
 
     protected $fillable = ['technician_id', 'date', 'region', 'route', 'overlap_alert'];
 
