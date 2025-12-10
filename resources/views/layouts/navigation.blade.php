@@ -7,22 +7,19 @@
         </a>
         @auth
             @if(Auth::user()->name === 'Admin')
-<<<<<<< Updated upstream
                 <div>
                     <input type="text" name="search" value="{{ request('search') }}"
                            class="w-full border-gray-300 rounded p-2"
                            placeholder="Search...">
                 </div>
-=======
-                <form action="{{ route('search') }}" method="GET" class="flex items-center ml-4">
-                    <input
-                        type="text"
-                        name="q"
-                        placeholder="Zoeken…"
-                        class="border rounded px-2 py-1 text-sm"
-                    />
-                </form>
->>>>>>> Stashed changes
+{{--                <form action="{{ route('search') }}" method="GET" class="flex items-center ml-4">--}}
+{{--                    <input--}}
+{{--                        type="text"--}}
+{{--                        name="q"--}}
+{{--                        placeholder="Zoeken…"--}}
+{{--                        class="border rounded px-2 py-1 text-sm"--}}
+{{--                    />--}}
+{{--                </form>--}}
             @endif
         @endauth
 
@@ -58,7 +55,7 @@
 
                 <a href="{{ route('contact') }}" class="text-white">Contact</a>
 
-                <a href="{{ route('auditpage') }}" class="text-white">auditpage</a>
+                <a href="{{ route('audit.index') }}" class="text-white">AuditPage</a>
 
                 <!-- Logout Form -->
                 <form method="POST" action="{{ route('logout') }}" class="inline">

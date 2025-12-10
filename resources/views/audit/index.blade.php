@@ -1,13 +1,13 @@
 @extends('layouts.app')
 
-@section('title', 'Audit')
+@section('title', 'audit')
 
 @section('content')
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
         <h1 class="text-2xl font-bold mb-6">Audit Logs</h1>
 
         <!-- Filter Form -->
-        <form method="GET" action="{{ route('auditpage') }}" class="mb-6 flex flex-wrap gap-4 items-end">
+        <form method="GET" action="{{ route('audit.index') }}" class="mb-6 flex flex-wrap gap-4 items-end">
             <div>
                 <label class="block text-sm font-medium text-gray-700">Gebruiker ID:</label>
                 <input type="text" name="user_id" value="{{ request('user_id') }}"
@@ -26,7 +26,7 @@
             </div>
         </form>
 
-        <!-- Audit Table -->
+        <!-- audit Table -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 shadow-sm rounded-lg">
                 <thead class="bg-gray-50">

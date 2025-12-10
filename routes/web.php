@@ -138,9 +138,10 @@ Route::middleware('auth')->group(function () {
 });
 
 
-Route::get('/auditpage', [\App\Http\Controllers\AuditLogController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('auditpage');
+Route::middleware('auth')->group(function () {
+    Route::get('/audit', [AuditLogController::class, 'index'])->name('audit.index');
+});
+
 
 
 // search
