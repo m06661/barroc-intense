@@ -14,7 +14,7 @@ class AuditLogController extends Controller
             ->latest()
             ->get();
 
-        return view('Audit.auditpage', compact('logs'));
+        return view('audit.index', compact('logs'));
     }
 
 }
