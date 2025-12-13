@@ -15,12 +15,10 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\AuditLogController;
 
-
 /*
 |--------------------------------------------------------------------------
 | Web Routes
 |--------------------------------------------------------------------------
-|
 | Hier worden alle routes van je webapplicatie gedefinieerd.
 | Routes zijn gegroepeerd en voorzien van middleware en logische secties.
 |
@@ -37,9 +35,7 @@ Route::get('/', function () {
 // Dashboard Routes
 // ------------------------------
 Route::middleware(['auth', 'verified'])->group(function () {
-    // Dashboard via controller zodat $products en $categories beschikbaar zijn
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-
     Route::get('/index', function () {
         return view('index');
     })->name('index');
@@ -48,26 +44,36 @@ Route::middleware(['auth', 'verified'])->group(function () {
 // ------------------------------
 // Contactpagina
 // ------------------------------
-Route::middleware('auth')->get('/contact', function () {
-    return view('contact');
-})->name('contact');
+Route::middleware('auth')->group(function () {
+    Route::get('/contact', [ContactController::class, 'show'])->name('contact');
+    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
+});
 
-//order routes
+// ------------------------------
+// Order Routes
+// ------------------------------
 Route::get('/orders', [OrderController::class, 'index'])->name('orders.index');
 Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->name('orders.updateStatus');
+Route::post('/orders/{id}/priority', [OrderController::class, 'updatePriority'])->name('orders.updatePriority');
 
-
+// ------------------------------
+// Customer Document Routes
+// ------------------------------
 Route::prefix('customers/{customer}/documents')->group(function () {
     Route::get('/', [CustomerDocumentController::class, 'index'])->name('documents.index');
     Route::post('/', [CustomerDocumentController::class, 'store'])->name('documents.store');
     Route::delete('/{document}', [CustomerDocumentController::class, 'destroy'])->name('documents.destroy');
 });
 
+// ------------------------------
+// Customers Routes
+// ------------------------------
 Route::get('/customers', function () {
     $customers = Customer::all();
     return view('customers.index', compact('customers'));
 });
+
 // ------------------------------
 // Lease Management Routes
 // ------------------------------
@@ -81,19 +87,20 @@ Route::middleware('auth')->prefix('leases')->name('leases.')->group(function () 
 });
 
 // ------------------------------
-// storingPagina
+// Issue Routes
 // ------------------------------
 Route::get('/issues', [IssueController::class, 'index'])->name('issues.index');
 Route::get('/issues/{id}', [IssueController::class, 'show'])->name('issues.show');
 Route::post('/issues/{id}/actions', [IssueController::class, 'addAction'])->name('issues.actions.add');
 
 // ------------------------------
-// RolePagina
+// Role Management Routes
 // ------------------------------
-Route::middleware(['auth', 'role:Admin'])->group(function() {
+Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::get('/roles/assign', [RoleController::class, 'assignForm'])->name('roles.assign');
     Route::post('/roles/assign/{user}', [RoleController::class, 'assignRoles'])->name('roles.assign.save');
 });
+
 // ------------------------------
 // Product Management Routes
 // ------------------------------
@@ -121,7 +128,7 @@ Route::middleware('auth')->prefix('categories')->name('categories.')->group(func
 });
 
 // ------------------------------
-// Profielbeheer Routes
+// Profile Management Routes
 // ------------------------------
 Route::middleware('auth')->prefix('profile')->name('profile.')->group(function () {
     Route::get('/', [ProfileController::class, 'edit'])->name('edit');
@@ -129,27 +136,19 @@ Route::middleware('auth')->prefix('profile')->name('profile.')->group(function (
     Route::delete('/', [ProfileController::class, 'destroy'])->name('destroy');
 });
 
-
-Route::middleware('auth')->group(function () {
-    // Route to display the form
-    Route::get('/contact', [ContactController::class, 'show'])->name('contact');
-    // Route to handle the form submission
-    Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-});
-
-
-Route::get('/auditpage', [\App\Http\Controllers\AuditLogController::class, 'index'])
+// ------------------------------
+// Audit Log
+// ------------------------------
+Route::get('/auditpage', [AuditLogController::class, 'index'])
     ->middleware(['auth'])
     ->name('auditpage');
 
-
-// search
+// ------------------------------
+// Search
+// ------------------------------
 Route::get('/search', [SearchController::class, 'search'])->name('search');
-
-
-Route::get('/orders/{id}', [OrderController::class, 'show'])->name('orders.show');
 
 // ------------------------------
 // Authentication Routes
 // ------------------------------
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

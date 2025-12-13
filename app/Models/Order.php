@@ -8,10 +8,15 @@ use App\Traits\Auditable;
 
 class Order extends Model
 {
-
     use HasFactory, Auditable;
 
-    protected $fillable = ['customer_id', 'order_date', 'status', 'priority', 'total_amount'];
+    protected $fillable = [
+        'customer_id',
+        'order_date',
+        'status',
+        'priority',
+        'total_amount'
+    ];
 
     public function customer()
     {
