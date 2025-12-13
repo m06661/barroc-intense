@@ -5,18 +5,15 @@
             <img src="{{ asset('images/logo5_klein.png') }}" alt="Barroc Intens Logo" class="h-8 mr-2"> <!-- Voeg het logo toe -->
             <span class="text-white text-2xl font-semibold">Barroc<span class="text-black">Intens.</span></span>
         </a>
-        @auth
-            @if(Auth::user()->name === 'Admin')
+{{--        @auth--}}
+{{--            @if(Auth::user()->name === 'Admin')--}}
                 <div>
                     <input type="text" name="search" value="{{ request('search') }}"
                            class="w-full border-gray-300 rounded p-2"
                            placeholder="Search...">
                 </div>
-            @endif
-        @endauth
-
-
-
+{{--            @endif--}}
+{{--        @endauth--}}
 
         <!-- Navigation Links -->
         <div class="space-x-4">
