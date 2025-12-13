@@ -44,7 +44,7 @@
 
                 <a href="{{ route('contact') }}" class="text-white">Contact</a>
 
-                <a href="{{ route('auditpage') }}" class="text-white">auditpage</a>
+                <a href="{{ route('audit.index') }}" class="text-white">auditpage</a>
 
                 <!-- Logout Form -->
                 <form method="POST" action="{{ route('logout') }}" class="inline">

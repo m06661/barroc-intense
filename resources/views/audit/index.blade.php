@@ -1,6 +1,6 @@
 @extends('layouts.app')
 
-@section('title', 'audit')
+@section('title', 'Audit Logs')
 
 @section('content')
     <div class="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
@@ -26,7 +26,7 @@
             </div>
         </form>
 
-        <!-- audit Table -->
+        <!-- Audit Table -->
         <div class="overflow-x-auto">
             <table class="min-w-full divide-y divide-gray-200 shadow-sm rounded-lg">
                 <thead class="bg-gray-50">

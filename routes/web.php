@@ -139,9 +139,9 @@ Route::middleware('auth')->prefix('profile')->name('profile.')->group(function (
 // ------------------------------
 // Audit Log
 // ------------------------------
-Route::get('/auditpage', [AuditLogController::class, 'index'])
-    ->middleware(['auth'])
-    ->name('auditpage');
+Route::middleware('auth')->get('/audit', [AuditLogController::class, 'index'])
+    ->name('audit.index');  // <- belangrijke aanpassing
+
 
 // ------------------------------
 // Search
