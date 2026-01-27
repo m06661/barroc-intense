@@ -12,6 +12,14 @@ class Issue extends Model
     protected $fillable = [
         'machine_id', 'user_id', 'reported_at', 'priority', 'status', 'description'
     ];
+    protected static function booted()
+    {
+        static::creating(function ($issue) {
+            if (empty($issue->reported_at)) {
+                $issue->reported_at = now();
+            }
+        });
+    }
 
     public function machine()
     {

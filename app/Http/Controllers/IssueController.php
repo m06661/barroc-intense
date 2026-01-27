@@ -12,7 +12,6 @@ class IssueController extends Controller
     {
         $query = Issue::with(['machine.customer']);
 
-        // search by text (machine type, serial, customer name, description)
         if ($request->search) {
             $query->where(function ($q) use ($request) {
                 $q->where('description', 'like', "%{$request->search}%")
@@ -26,30 +25,37 @@ class IssueController extends Controller
             });
         }
 
-        // filter status
         if ($request->status && $request->status !== 'all') {
             $query->where('status', $request->status);
         }
 
-        // filter priority
         if ($request->priority && $request->priority !== 'all') {
             $query->where('priority', $request->priority);
         }
 
-        // filter customer
         if ($request->customer && $request->customer !== 'all') {
             $query->whereHas('machine.customer', function ($q) use ($request) {
                 $q->where('id', $request->customer);
             });
         }
 
-        $issues = $query->orderBy('reported_at', 'desc')->paginate(10);
+        // STORING DASHBOARD DATA
+        $stats = [
+            'last_7_days' => Issue::where('created_at', '>=', now()->subDays(7))->count(),
+            'last_30_days' => Issue::where('created_at', '>=', now()->subDays(30))->count(),
+            'open' => Issue::where('status', 'open')->count(),
+        ];
 
-        // for filter dropdowns
+        // FIX SORTERING
+        $issues = $query
+            ->orderByRaw('COALESCE(reported_at, created_at) DESC')
+            ->paginate(10);
+
         $customers = \App\Models\Customer::orderBy('name')->get();
 
-        return view('issues.index', compact('issues', 'customers'));
+        return view('issues.index', compact('issues', 'customers', 'stats'));
     }
+
 
 
     public function show($id)
@@ -62,11 +68,17 @@ class IssueController extends Controller
         // previous issues for same machine
         $history = Issue::where('machine_id', $issue->machine_id)
             ->where('id', '!=', $id)
-            ->orderBy('reported_at', 'desc')
+            ->orderByRaw('COALESCE(reported_at, created_at) DESC')
             ->get();
 
-        return view('issues.show', compact('issue', 'history'));
+        // storingsfrequentie (signaal)
+        $frequency = Issue::where('machine_id', $issue->machine_id)
+            ->where('created_at', '>=', now()->subDays(30))
+            ->count();
+
+        return view('issues.show', compact('issue', 'history', 'frequency'));
     }
+
 
     public function addAction(Request $request, $id)
     {

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->unsignedBigInteger('machine_id');
             $table->unsignedBigInteger('user_id')->nullable();
-            $table->dateTime('reported_at');
+            $table->dateTime('reported_at')->nullable();
             $table->string('priority')->default('normal');
             $table->string('status')->default('open');
             $table->text('description');
