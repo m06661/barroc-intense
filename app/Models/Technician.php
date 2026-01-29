@@ -2,41 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Traits\Auditable;
 
 class Technician extends Model
 {
-    use HasFactory;
 
-    protected $fillable = [
-        'name',
-        'region',
-    ];
+    use HasFactory, Auditable;
 
-    public function feedbacks(): HasMany
-    {
-        return $this->hasMany(Feedback::class);
-    }
+    protected $fillable = ['name', 'region'];
 
-    public function schedules(): HasMany
-    {
-        return $this->hasMany(Schedule::class);
-    }
-
-    public function maintenances(): HasMany
+    public function maintenance()
     {
         return $this->hasMany(Maintenance::class);
     }
 
-    /**
-     * Gemiddelde score voor deze technicus
-     */
-    public function averageScore()
+    public function schedule()
     {
-        return $this->feedbacks()
-            ->whereNotNull('score')
-            ->avg('score');
+        return $this->hasMany(Schedule::class);
     }
 }
