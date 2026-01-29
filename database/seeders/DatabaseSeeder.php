@@ -8,8 +8,6 @@ use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
 use App\Models\Customer;
 use App\Models\Order;
-use App\Models\Machine;
-use App\Models\Maintenance;
 
 class DatabaseSeeder extends Seeder
 {
@@ -27,8 +25,8 @@ class DatabaseSeeder extends Seeder
             OrderSeeder::class,
         ]);
         Customer::factory()->count(50)->create();
+
         Order::factory()->count(10)->create();
-        Machine::factory()->count(30)->create();
 
         // === ADMIN USER ===
         $Admin = User::create([

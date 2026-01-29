@@ -38,9 +38,7 @@
                 <!-- Dit moet later specifiek voor de juiste users worden -->
                 <a href="{{ route('dashboard') }}" class="text-white">Dashboard</a>
 
-                <a href="{{ route('machines.index') }}" class="text-white">Machines</a>
-                <!-- Feedback Link -->
-                <a href="{{ route('feedback.index') }}" class="text-white hover:text-gray-200 transition">Feedback</a>
+                <a href="{{ route('products.index') }}" class="text-white">Machines</a>
 
                 <a href="{{ route('leases.index') }}" class="text-white">Leases</a>
 
