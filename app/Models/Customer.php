@@ -2,12 +2,14 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use App\Traits\Auditable;
 
 class Customer extends Model
 {
+
     use HasFactory, Auditable;
 
     protected $fillable = [
@@ -31,30 +33,26 @@ class Customer extends Model
 
     // ========== BESTAANDE RELATIES ==========
 
-    public function orders()
+    public function orders(): HasMany
     {
         return $this->hasMany(Order::class);
     }
 
-    public function maintenance()
+    public function machines(): HasMany
     {
-        return $this->hasMany(Maintenance::class);
+        return $this->hasMany(Machine::class);
     }
 
-    public function feedback()
+    public function feedbacks(): HasMany
     {
         return $this->hasMany(Feedback::class);
     }
 
-    public function documents()
+    public function maintenances(): HasMany
     {
-        return $this->hasMany(CustomerDocument::class);
+        return $this->hasMany(Maintenance::class);
     }
 
-    public function machines()
-    {
-        return $this->hasMany(Machine::class);
-    }
 
     // ========== NIEUWE RELATIES ==========
 

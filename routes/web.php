@@ -14,6 +14,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\FeedbackController;
+use App\Http\Controllers\MachineController;
 use App\Http\Controllers\SalesFunnelController;
 use App\Http\Controllers\CustomerController;
 
@@ -109,6 +111,14 @@ Route::middleware('auth')->prefix('leases')->name('leases.')->group(function () 
 });
 
 // ------------------------------
+// Feedback routes
+// ------------------------------
+Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+Route::get('/feedback/new', [FeedbackController::class, 'new'])->name('feedback.new');  // ← Nieuwe route
+Route::get('/feedback/{feedback}', [FeedbackController::class, 'create'])->name('feedback.create');
+Route::post('/feedback/{feedback}', [FeedbackController::class, 'store'])->name('feedback.store');
+Route::get('/feedback/{feedback}/thanks', [FeedbackController::class, 'thankYou'])->name('feedback.thankyou');
+// ------------------------------
 // Issue Routes
 // ------------------------------
 Route::get('/issues', [IssueController::class, 'index'])->name('issues.index');
@@ -123,6 +133,12 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::post('/roles/assign/{user}', [RoleController::class, 'assignRoles'])->name('roles.assign.save');
 });
 
+// ------------------------------
+// Machines Management Routes
+// ------------------------------
+Route::middleware('auth')->prefix('machines')->name('machines.')->group(function () {
+    Route::get('/', [MachineController::class, 'index'])->name('index');
+});
 // ------------------------------
 // Product Management Routes
 // ------------------------------
