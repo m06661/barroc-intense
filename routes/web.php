@@ -14,6 +14,7 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\FeedbackController;
 
 /*
 |--------------------------------------------------------------------------
@@ -86,6 +87,14 @@ Route::middleware('auth')->prefix('leases')->name('leases.')->group(function () 
     Route::delete('/{lease}', [LeaseController::class, 'destroy'])->name('destroy');
 });
 
+// ------------------------------
+// Feedback routes
+// ------------------------------
+Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
+Route::get('/feedback/new', [FeedbackController::class, 'new'])->name('feedback.new');  // ← Nieuwe route
+Route::get('/feedback/{feedback}', [FeedbackController::class, 'create'])->name('feedback.create');
+Route::post('/feedback/{feedback}', [FeedbackController::class, 'store'])->name('feedback.store');
+Route::get('/feedback/{feedback}/thanks', [FeedbackController::class, 'thankYou'])->name('feedback.thankyou');
 // ------------------------------
 // Issue Routes
 // ------------------------------

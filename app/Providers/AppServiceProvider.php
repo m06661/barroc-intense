@@ -5,7 +5,8 @@ namespace App\Providers;
 use Illuminate\Support\ServiceProvider;
 use App\Models\Customer;
 use App\Observers\CustomerObserver;
-
+use App\Models\Machine;
+use App\Observers\MachineObserver;
 class AppServiceProvider extends ServiceProvider
 {
     /**
@@ -23,5 +24,9 @@ class AppServiceProvider extends ServiceProvider
     {
         // Registreer de observer op het Customer model
         Customer::observe(CustomerObserver::class);
+
+        // Registreer de observer op het Machine model
+        Machine::observe(MachineObserver::class);
+
     }
 }
