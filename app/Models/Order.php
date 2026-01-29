@@ -2,39 +2,46 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
-use App\Traits\Auditable;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Order extends Model
 {
-    use HasFactory, Auditable;
+    use HasFactory;
 
     protected $fillable = [
         'customer_id',
         'order_date',
         'status',
         'priority',
-        'total_amount'
+        'total_amount',
     ];
 
-    public function customer()
+    protected $casts = [
+        'order_date' => 'date',
+        'created_at' => 'datetime',
+        'updated_at' => 'datetime',
+    ];
+
+    public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
     }
 
-    public function invoices()
+    public function feedbacks(): HasMany
+    {
+        return $this->hasMany(Feedback::class);
+    }
+
+    public function invoices(): HasMany
     {
         return $this->hasMany(Invoice::class);
     }
 
-    public function tasks()
+    public function items(): HasMany
     {
-        return $this->hasMany(Task::class);
-    }
-
-    public function feedback()
-    {
-        return $this->hasMany(Feedback::class);
+        return $this->hasMany(OrderItem::class);
     }
 }
