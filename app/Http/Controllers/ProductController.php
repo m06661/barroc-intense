@@ -21,14 +21,17 @@ class ProductController extends Controller
             'name'  => 'required',
             'price' => 'required|numeric',
             'stock' => 'required|integer|min:0',
+            'minimum_stock' => 'required|integer|min:0',
+            'reorder_quantity' => 'required|integer|min:1',
         ]);
 
         Product::create([
-            'name'          => $request->name,
-            'sku'           => $request->sku ?? null,
-            'price'         => $request->price,
-            'stock'         => $request->stock,
-            'minimum_stock' => 0,
+            'name'             => $request->name,
+            'sku'              => $request->sku ?? null,
+            'price'            => $request->price,
+            'stock'            => $request->stock,
+            'minimum_stock'    => $request->minimum_stock,
+            'reorder_quantity' => $request->reorder_quantity,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Product aangemaakt!');
@@ -41,13 +44,17 @@ class ProductController extends Controller
             'name'  => 'sometimes|required',
             'price' => 'sometimes|required|numeric',
             'stock' => 'sometimes|required|integer|min:0',
+            'minimum_stock' => 'sometimes|required|integer|min:0',
+            'reorder_quantity' => 'sometimes|required|integer|min:1',
         ]);
 
         $product->update([
-            'name'  => $request->name ?? $product->name,
-            'sku'   => $request->sku ?? $product->sku,
-            'price' => $request->price ?? $product->price,
-            'stock' => $request->stock ?? $product->stock,
+            'name'             => $request->name ?? $product->name,
+            'sku'              => $request->sku ?? $product->sku,
+            'price'            => $request->price ?? $product->price,
+            'stock'            => $request->stock ?? $product->stock,
+            'minimum_stock'    => $request->minimum_stock ?? $product->minimum_stock,
+            'reorder_quantity' => $request->reorder_quantity ?? $product->reorder_quantity,
         ]);
 
         return redirect()->route('dashboard')->with('success', 'Product bijgewerkt!');
