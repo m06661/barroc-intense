@@ -48,6 +48,10 @@
 
                 <a href="{{ route('audit.index') }}" class="text-white">auditpage</a>
 
+                <a href="{{ route('sales-funnel.index') }}" class="text-white">
+                    Sales Funnel
+                </a>
+
                 <!-- Logout Form -->
                 <form method="POST" action="{{ route('logout') }}" class="inline">
                     @csrf

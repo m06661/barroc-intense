@@ -16,6 +16,9 @@ use App\Http\Controllers\IssueController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\FeedbackController;
 use App\Http\Controllers\MachineController;
+use App\Http\Controllers\SalesFunnelController;
+use App\Http\Controllers\CustomerController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -59,21 +62,41 @@ Route::post('/orders/{id}/status', [OrderController::class, 'updateStatus'])->na
 Route::post('/orders/{id}/priority', [OrderController::class, 'updatePriority'])->name('orders.updatePriority');
 
 // ------------------------------
+// Customers Routes
+// ------------------------------
+Route::middleware('auth')->group(function () {
+    // Klanten overzicht
+    Route::get('/customers', [CustomerController::class, 'index'])->name('customers.index');
+
+    // Klant detail pagina (Sales Funnel + Info)
+    Route::get('/customers/{customer}', [CustomerController::class, 'show'])->name('customers.show');
+
+    // Customer CRUD (indien nodig)
+    Route::get('/customers/create', [CustomerController::class, 'create'])->name('customers.create');
+    Route::post('/customers', [CustomerController::class, 'store'])->name('customers.store');
+    Route::get('/customers/{customer}/edit', [CustomerController::class, 'edit'])->name('customers.edit');
+    Route::put('/customers/{customer}', [CustomerController::class, 'update'])->name('customers.update');
+    Route::delete('/customers/{customer}', [CustomerController::class, 'destroy'])->name('customers.destroy');
+
+    // Sales Funnel acties
+    Route::put('/customers/{customer}/stage', [CustomerController::class, 'updateStage'])->name('customers.update-stage');
+    Route::put('/customers/{customer}/assignment', [CustomerController::class, 'updateAssignment'])->name('customers.update-assignment');
+    Route::post('/customers/{customer}/activity', [CustomerController::class, 'addActivity'])->name('customers.add-activity');
+});
+
+// ------------------------------
 // Customer Document Routes
 // ------------------------------
-Route::prefix('customers/{customer}/documents')->group(function () {
-    Route::get('/', [CustomerDocumentController::class, 'index'])->name('documents.index');
-    Route::post('/', [CustomerDocumentController::class, 'store'])->name('documents.store');
+Route::middleware('auth')->prefix('customers/{customer}/documents')->name('documents.')->group(function () {
+    Route::get('/', [CustomerDocumentController::class, 'index'])->name('index');
+    Route::post('/', [CustomerDocumentController::class, 'store'])->name('store');
     Route::delete('/{document}', [CustomerDocumentController::class, 'destroy'])->name('documents.destroy');
 });
 
 // ------------------------------
-// Customers Routes
+// Sales Funnel Dashboard
 // ------------------------------
-Route::get('/customers', function () {
-    $customers = Customer::all();
-    return view('customers.index', compact('customers'));
-});
+Route::middleware('auth')->get('/sales-funnel', [SalesFunnelController::class, 'index'])->name('sales-funnel.index');
 
 // ------------------------------
 // Lease Management Routes
@@ -154,9 +177,7 @@ Route::middleware('auth')->prefix('profile')->name('profile.')->group(function (
 // ------------------------------
 // Audit Log
 // ------------------------------
-Route::middleware('auth')->get('/audit', [AuditLogController::class, 'index'])
-    ->name('audit.index');  // <- belangrijke aanpassing
-
+Route::middleware('auth')->get('/audit', [AuditLogController::class, 'index'])->name('audit.index');
 
 // ------------------------------
 // Search
