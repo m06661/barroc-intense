@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Machine extends Model
 {
-    use hasFactory;
+    use HasFactory;
 
     protected $fillable = [
         'customer_id',

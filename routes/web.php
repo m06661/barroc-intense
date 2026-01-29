@@ -15,7 +15,7 @@ use App\Http\Controllers\RoleController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\AuditLogController;
 use App\Http\Controllers\FeedbackController;
-
+use App\Http\Controllers\MachineController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -110,6 +110,12 @@ Route::middleware(['auth', 'role:Admin'])->group(function () {
     Route::post('/roles/assign/{user}', [RoleController::class, 'assignRoles'])->name('roles.assign.save');
 });
 
+// ------------------------------
+// Machines Management Routes
+// ------------------------------
+Route::middleware('auth')->prefix('machines')->name('machines.')->group(function () {
+    Route::get('/', [MachineController::class, 'index'])->name('index');
+});
 // ------------------------------
 // Product Management Routes
 // ------------------------------

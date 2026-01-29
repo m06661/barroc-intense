@@ -14,14 +14,21 @@
                         <label for="machine_id" class="block text-sm font-medium text-gray-900 mb-2">
                             Select Machine
                         </label>
-                        <select id="machine_id" name="machine_id" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:ring-2 focus:ring-blue-500 focus:border-transparent" required>
-                            <option value="">-- Choose a machine --</option>
+
+                        <select id="machine_id" name="machine_id" required
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                            <option value="">-- Choose a machine type --</option>
                             @foreach($machines as $machine)
                                 <option value="{{ $machine->id }}">
-                                    {{ $machine->type }} ({{ $machine->serial_number }})
+                                    {{ $machine->type }}
+                                    — {{ $machine->serial_number }}
+                                    @if($machine->location)
+                                        ({{ $machine->location }})
+                                    @endif
                                 </option>
                             @endforeach
                         </select>
+
                         @error('machine_id')
                         <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
                         @enderror

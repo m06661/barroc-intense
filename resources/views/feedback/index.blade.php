@@ -7,7 +7,7 @@
             <div class="flex justify-between items-center mb-8">
                 <h1 class="text-3xl font-bold text-gray-900">Your Feedback Requests</h1>
                 <a href="{{ route('feedback.new') }}"
-                   class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition">
+                   class="bg-yellow-500 hover:bg-yellow-800 text-white font-bold py-2 px-6 rounded-lg transition">
                     + New Feedback
                 </a>
             </div>

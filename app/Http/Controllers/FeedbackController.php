@@ -11,6 +11,7 @@ class FeedbackController extends Controller
     /**
      * Toon alle feedback aanvragen
      */
+
     public function index()
     {
         $feedbacks = Feedback::orderBy('feedback_requested_at', 'desc')->get();
@@ -31,6 +32,7 @@ class FeedbackController extends Controller
      */
     public function create(Feedback $feedback)
     {
+
         if ($feedback->isFeedbackGiven()) {
             return view('feedback.already-given', compact('feedback'));
         }
