@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
+
 
 class OrderController extends Controller
 {
@@ -53,4 +55,30 @@ class OrderController extends Controller
 
         return redirect()->back();
     }
+
+    public function markDelivered(Request $request, $id)
+{
+    $request->validate([
+        'delivery_proof' => 'required|image|max:5120'
+    ]);
+
+    $order = Order::findOrFail($id);
+
+    // alleen afronden als je in delivery zit
+    if ($order->status !== 'delivery') {
+        return redirect()->back()->with('error', 'Order staat niet op delivery.');
+    }
+
+    $path = $request->file('delivery_proof')->store('delivery_proofs', 'public');
+
+    $order->status = 'invoice';
+    $order->delivered_at = now();
+    $order->delivered_by = auth()->id(); // prima
+    $order->delivery_proof = $path;
+    $order->save();
+
+    return redirect()->back()->with('success', 'Levering succesvol afgerond.');
+}
+
+
 }
