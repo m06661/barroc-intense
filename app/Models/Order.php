@@ -12,12 +12,16 @@ class Order extends Model
     use HasFactory;
 
     protected $fillable = [
-        'customer_id',
-        'order_date',
-        'status',
-        'priority',
-        'total_amount',
-    ];
+    'customer_id',
+    'order_date',
+    'status',
+    'priority',
+    'total_amount',
+    'delivered_at',
+    'delivered_by',
+    'delivery_proof'
+];
+
 
     protected $casts = [
         'order_date' => 'date',
@@ -44,4 +48,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderItem::class);
     }
+    public function deliveredBy()
+    {
+        return $this->belongsTo(User::class, 'delivered_by');
+    }
+
 }

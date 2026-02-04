@@ -21,6 +21,29 @@
                 Order #{{ $order->id }}
             </h1>
 
+            @if(session('success'))
+                <div class="mb-4 p-4 rounded bg-green-100 text-green-800 border border-green-200">
+                    {{ session('success') }}
+                </div>
+            @endif
+
+            @if(session('error'))
+                <div class="mb-4 p-4 rounded bg-red-100 text-red-800 border border-red-200">
+                    {{ session('error') }}
+                </div>
+            @endif
+
+            @if ($errors->any())
+                <div class="mb-4 p-4 rounded bg-red-100 text-red-800 border border-red-200">
+                    <ul class="list-disc pl-5">
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
+
+
             <!-- Order Info Grid -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-10">
 
@@ -52,7 +75,9 @@
                         @elseif($order->status === 'contract') bg-blue-100 text-blue-700
                         @elseif($order->status === 'delivery') bg-yellow-100 text-yellow-800
                         @elseif($order->status === 'invoice') bg-green-100 text-green-800
+                        @elseif($order->status === 'delivered') bg-green-200 text-green-900
                         @endif
+
                     ">
                         {{ ucfirst($order->status) }}
                     </span>
@@ -92,6 +117,57 @@
                     </button>
                 </form>
             </div>
+
+            @if($order->status === 'delivery')
+                <div class="mt-8 p-6 bg-yellow-50 border border-yellow-200 rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Levering afronden</h2>
+
+                    <form action="{{ route('orders.markDelivered', $order->id) }}"
+                        method="POST"
+                        enctype="multipart/form-data">
+                        @csrf
+
+                        <div class="mb-4">
+                            <label class="block font-medium mb-1">
+                                Foto / handtekening als bewijs
+                            </label>
+                            <input type="file"
+                                name="delivery_proof"
+                                accept="image/*"
+                                required
+                                class="block w-full border rounded p-2">
+                        </div>
+
+                        <button class="bg-green-600 hover:bg-green-700 text-white px-6 py-2 rounded-lg font-semibold">
+                            ✔️ Levering succesvol afronden
+                        </button>
+                    </form>
+                </div>
+            @endif
+
+            @if($order->status === 'delivered')
+                <div class="mt-8 p-6 bg-green-50 border border-green-200 rounded-lg">
+                    <h2 class="text-lg font-semibold mb-4">Levering afgerond ✅</h2>
+
+                    <p class="text-gray-700 mb-2">
+                        <strong>Afgerond op:</strong> {{ $order->delivered_at ?? '-' }}
+                    </p>
+
+                    <p class="text-gray-700 mb-4">
+                        <strong>Afgerond door (user id):</strong> {{ $order->delivered_by ?? '-' }}
+                    </p>
+
+                    @if($order->delivery_proof)
+                        <p class="text-gray-700 mb-2"><strong>Bewijs:</strong></p>
+                        <img src="{{ asset('storage/' . $order->delivery_proof) }}"
+                            class="max-w-md rounded border">
+                    @else
+                        <p class="text-gray-500">Geen bewijsbestand opgeslagen.</p>
+                    @endif
+                </div>
+            @endif
+
+
 
             <!-- Prioriteit Update -->
             <div class="mb-10">

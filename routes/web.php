@@ -184,6 +184,11 @@ Route::middleware('auth')->get('/audit', [AuditLogController::class, 'index'])->
 // ------------------------------
 Route::get('/search', [SearchController::class, 'search'])->name('search');
 
+Route::post('/orders/{id}/deliver', [OrderController::class, 'markDelivered'])
+    ->name('orders.markDelivered')
+    ->middleware('auth');
+
+
 // ------------------------------
 // Authentication Routes
 // ------------------------------
