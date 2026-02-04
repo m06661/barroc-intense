@@ -40,6 +40,11 @@ class Customer extends Model
         return $this->hasMany(CustomerDocument::class);
     }
 
+    public function maintenance()
+    {
+        return $this->hasMany(Maintenance::class);
+    }
+
     public function machines()
     {
         return $this->hasMany(Machine::class);

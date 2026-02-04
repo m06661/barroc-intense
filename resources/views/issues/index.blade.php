@@ -27,57 +27,77 @@
         </div>
 
         <!-- Filters -->
-        <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-6 mb-10">
-            <h2 class="text-2xl font-semibold text-gray-800 mb-6">Filters</h2>
-            <form method="GET" action="{{ route('issues.index') }}" class="grid grid-cols-1 md:grid-cols-4 gap-6">
+            <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-6 mb-10">
+                <h2 class="text-2xl font-semibold text-gray-800 mb-6">Filters</h2>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
-                    <input type="text" name="search" value="{{ request('search') }}"
-                           class="w-full border-gray-300 rounded p-2"
-                           placeholder="Search issues, machines, customers...">
-                </div>
+                <form method="GET"
+                    action="{{ route('issues.index') }}"
+                    class="grid grid-cols-1 md:grid-cols-4 gap-6">
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
-                    <select name="status" class="w-full border-gray-300 rounded p-2">
-                        <option value="all">All</option>
-                        <option value="open" {{ request('status')=='open' ? 'selected' : '' }}>Open</option>
-                        <option value="in progress" {{ request('status')=='in progress' ? 'selected' : '' }}>In Progress</option>
-                        <option value="resolved" {{ request('status')=='resolved' ? 'selected' : '' }}>Resolved</option>
-                    </select>
-                </div>
+                    <!-- Search -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Search</label>
+                        <input type="text"
+                            name="search"
+                            value="{{ request('search') }}"
+                            class="w-full border-gray-300 rounded p-2"
+                            placeholder="Search issues, machines, customers...">
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
-                    <select name="priority" class="w-full border-gray-300 rounded p-2">
-                        <option value="all">All</option>
-                        <option value="low" {{ request('priority')=='low' ? 'selected' : '' }}>Low</option>
-                        <option value="medium" {{ request('priority')=='medium' ? 'selected' : '' }}>Medium</option>
-                        <option value="high" {{ request('priority')=='high' ? 'selected' : '' }}>High</option>
-                    </select>
-                </div>
+                    <!-- Status -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Status</label>
+                        <select name="status" class="w-full border-gray-300 rounded p-2">
+                            <option value="all">All</option>
+                            <option value="open" {{ request('status')=='open' ? 'selected' : '' }}>Open</option>
+                            <option value="in progress" {{ request('status')=='in progress' ? 'selected' : '' }}>In Progress</option>
+                            <option value="resolved" {{ request('status')=='resolved' ? 'selected' : '' }}>Resolved</option>
+                        </select>
+                    </div>
 
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-1">Customer</label>
-                    <select name="customer" class="w-full border-gray-300 rounded p-2">
-                        <option value="all">All Customers</option>
-                        @foreach($customers as $customer)
-                            <option value="{{ $customer->id }}" {{ request('customer')==$customer->id ? 'selected' : '' }}>
-                                {{ $customer->name }}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+                    <!-- Priority -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Priority</label>
+                        <select name="priority" class="w-full border-gray-300 rounded p-2">
+                            <option value="all">All</option>
+                            <option value="low" {{ request('priority')=='low' ? 'selected' : '' }}>Low</option>
+                            <option value="medium" {{ request('priority')=='medium' ? 'selected' : '' }}>Medium</option>
+                            <option value="high" {{ request('priority')=='high' ? 'selected' : '' }}>High</option>
+                        </select>
+                    </div>
 
-            </form>
-            <div class="mt-6 text-right">
-                <button onclick="this.closest('form').submit()"
-                        class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded shadow-md">
-                    Apply Filters
-                </button>
+                    <!-- Customer -->
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Customer</label>
+                        <select name="customer" class="w-full border-gray-300 rounded p-2">
+                            <option value="all">All Customers</option>
+                            @foreach($customers as $customer)
+                                <option value="{{ $customer->id }}"
+                                    {{ request('customer')==$customer->id ? 'selected' : '' }}>
+                                    {{ $customer->name }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+
+                    <!-- Submit -->
+                    <div class="md:col-span-4 text-right">
+                        <button type="submit"
+                                class="bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded shadow-md">
+                            Apply Filters
+                        </button>
+                    </div>
+
+                </form>
             </div>
+
+        <div class="max-w-6xl mx-auto mb-6 flex justify-end">
+            <a href="{{ route('issues.create') }}"
+            class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded shadow">
+                + New Issue
+            </a>
         </div>
+
 
         <!-- Issues Table -->
         <div class="max-w-6xl mx-auto bg-white rounded-lg shadow-md p-6">

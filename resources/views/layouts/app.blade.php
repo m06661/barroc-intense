@@ -11,26 +11,34 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
 
-    <!-- Scripts -->
+    <!-- Vite -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
+
 <body class="font-sans antialiased">
 <div class="min-h-screen bg-white">
     @include('layouts.navigation')
 
-    <!-- Page Heading -->
+    {{-- Page Header --}}
     @if (isset($header))
-        <header class="bg-white dark:bg-gray-800 shadow">
+        <header class="bg-white shadow">
             <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                 {{ $header }}
             </div>
         </header>
     @endif
 
-    <!-- Page Content -->
-    <main>
+    {{-- Page Content --}}
+    <main class="py-6">
         @yield('content')
     </main>
 </div>
+
+{{-- Chart.js (globaal, één keer) --}}
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+{{-- Page-specific scripts --}}
+@stack('scripts')
+
 </body>
 </html>

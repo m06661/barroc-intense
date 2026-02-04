@@ -2,58 +2,24 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Model;
+use App\Traits\Auditable;
 
 class Feedback extends Model
 {
-    use HasFactory;
 
-    protected $table = 'feedback';
+    use HasFactory, Auditable;
 
-    protected $fillable = [
-        'customer_id',
-        'order_id',
-        'technician_id',
-        'machine_id',
-        'score',
-        'comments',
-        'feedback_requested_at',
-    ];
+    protected $fillable = ['customer_id', 'order_id', 'score', 'comments'];
 
-    protected $casts = [
-        'score' => 'integer',
-        'feedback_requested_at' => 'datetime',
-        'created_at' => 'datetime',
-        'updated_at' => 'datetime',
-    ];
-
-    public function customer(): BelongsTo
+    public function customer()
     {
         return $this->belongsTo(Customer::class);
     }
 
-    public function order(): BelongsTo
+    public function order()
     {
         return $this->belongsTo(Order::class);
-    }
-
-    public function technician(): BelongsTo
-    {
-        return $this->belongsTo(Technician::class);
-    }
-
-    public function machine(): BelongsTo
-    {
-        return $this->belongsTo(Machine::class);
-    }
-
-    /**
-     * Check of feedback al is gegeven
-     */
-    public function isFeedbackGiven(): bool
-    {
-        return $this->score !== null;
     }
 }
