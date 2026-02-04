@@ -2,15 +2,13 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use App\Traits\Auditable;
+use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Carbon;
 
 class Customer extends Model
 {
-
-    use HasFactory, Auditable;
+    use HasFactory;
 
     protected $fillable = [
         'name',
@@ -21,40 +19,40 @@ class Customer extends Model
         'iban',
         'contract_type',
         'status',
-        // Nieuwe velden
         'funnel_stage',
         'last_contact_date',
-        'assigned_to'
+        'assigned_to',
     ];
 
     protected $casts = [
-        'last_contact_date' => 'date'
+        'last_contact_date' => 'date',
     ];
 
-    // ========== BESTAANDE RELATIES ==========
+    // ========== RELATIES ==========
 
-    public function orders(): HasMany
+    public function orders()
     {
         return $this->hasMany(Order::class);
     }
 
-    public function machines(): HasMany
+    public function documents()
+    {
+        return $this->hasMany(CustomerDocument::class);
+    }
+
+    public function machines()
     {
         return $this->hasMany(Machine::class);
     }
 
-    public function feedbacks(): HasMany
+    /**
+     * VOORKOMT:
+     * Call to undefined relationship [feedback]
+     */
+    public function feedback()
     {
         return $this->hasMany(Feedback::class);
     }
-
-    public function maintenances(): HasMany
-    {
-        return $this->hasMany(Maintenance::class);
-    }
-
-
-    // ========== NIEUWE RELATIES ==========
 
     public function assignedUser()
     {
@@ -63,56 +61,53 @@ class Customer extends Model
 
     public function activities()
     {
-        return $this->hasMany(CustomerActivity::class)->orderBy('created_at', 'desc');
+        return $this->hasMany(CustomerActivity::class)
+            ->orderBy('created_at', 'desc');
     }
 
-    // ========== HELPER METHODS ==========
+    // ========== HELPERS ==========
 
-    public function getFunnelStageLabel()
+    public function getFunnelStageLabel(): string
     {
-        $labels = [
-            'lead' => 'Lead',
-            'prospect' => 'Prospect',
+        return [
+            'lead'       => 'Lead',
+            'prospect'   => 'Prospect',
             'quote_sent' => 'Offerte Verstuurd',
-            'customer' => 'Klant',
-            'delivered' => 'Geleverd'
-        ];
-
-        return $labels[$this->funnel_stage] ?? 'Onbekend';
+            'customer'   => 'Klant',
+            'delivered'  => 'Geleverd',
+        ][$this->funnel_stage] ?? 'Onbekend';
     }
 
-    public function getFunnelStageColor()
+    public function getFunnelStageColor(): string
     {
-        $colors = [
-            'lead' => 'bg-gray-500',
-            'prospect' => 'bg-blue-500',
+        return [
+            'lead'       => 'bg-gray-500',
+            'prospect'   => 'bg-blue-500',
             'quote_sent' => 'bg-yellow-500',
-            'customer' => 'bg-green-500',
-            'delivered' => 'bg-purple-500'
-        ];
-
-        return $colors[$this->funnel_stage] ?? 'bg-gray-400';
+            'customer'   => 'bg-green-500',
+            'delivered'  => 'bg-purple-500',
+        ][$this->funnel_stage] ?? 'bg-gray-400';
     }
 
-    public function getFunnelStageIcon()
+    public function getFunnelStageIcon(): string
     {
-        $icons = [
-            'lead' => '🔍',
-            'prospect' => '💼',
+        return [
+            'lead'       => '🔍',
+            'prospect'   => '💼',
             'quote_sent' => '📄',
-            'customer' => '✅',
-            'delivered' => '🚚'
-        ];
-
-        return $icons[$this->funnel_stage] ?? '❓';
+            'customer'   => '✅',
+            'delivered'  => '🚚',
+        ][$this->funnel_stage] ?? '❓';
     }
 
-    public function daysSinceLastContact()
+    public function daysSinceLastContact(): ?int
     {
         if (!$this->last_contact_date) {
             return null;
         }
 
-        return now()->diffInDays($this->last_contact_date);
+        return now()->diffInDays(
+            Carbon::parse($this->last_contact_date)
+        );
     }
 }
