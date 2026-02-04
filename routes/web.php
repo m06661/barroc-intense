@@ -14,6 +14,8 @@ use App\Http\Controllers\SearchController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\IssueController;
 use App\Http\Controllers\AuditLogController;
+use App\Http\Controllers\CustomerController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -87,13 +89,6 @@ Route::middleware('auth')->prefix('leases')->name('leases.')->group(function () 
 });
 
 // ------------------------------
-// Issue Routes
-// ------------------------------
-Route::get('/issues', [IssueController::class, 'index'])->name('issues.index');
-Route::get('/issues/{id}', [IssueController::class, 'show'])->name('issues.show');
-Route::post('/issues/{id}/actions', [IssueController::class, 'addAction'])->name('issues.actions.add');
-
-// ------------------------------
 // Role Management Routes
 // ------------------------------
 Route::middleware(['auth', 'role:Admin'])->group(function () {
@@ -152,3 +147,16 @@ Route::get('/search', [SearchController::class, 'search'])->name('search');
 // Authentication Routes
 // ------------------------------
 require __DIR__ . '/auth.php';
+
+Route::get('/customers/{customer}/issues', [CustomerController::class, 'issues'])
+    ->name('customers.issues');
+
+
+Route::middleware(['auth'])->group(function () {
+    Route::resource('issues', IssueController::class);
+
+    Route::post(
+        '/issues/{issue}/actions',
+        [IssueController::class, 'addAction']
+    )->name('issues.actions.add');
+});

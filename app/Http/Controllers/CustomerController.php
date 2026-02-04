@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Customer;
 use Illuminate\Http\Request;
-
+use App\Models\Issue;
 class CustomerController extends Controller
 {
     public function index()
@@ -72,5 +72,22 @@ class CustomerController extends Controller
 
         return redirect()->route('customers.index')
             ->with('success', 'Customer deleted successfully.');
+    }
+
+    public function issues(Customer $customer)
+    {
+        $issues = Issue::with('machine')
+            ->whereHas('machine', function ($q) use ($customer) {
+                $q->where('customer_id', $customer->id);
+            })
+            ->orderByRaw('COALESCE(reported_at, created_at) DESC')
+            ->get();
+
+        $stats = [
+            'total' => $issues->count(),
+            'last_30_days' => $issues->where('created_at', '>=', now()->subDays(30))->count(),
+        ];
+
+        return view('customers.issues', compact('customer', 'issues', 'stats'));
     }
 }
