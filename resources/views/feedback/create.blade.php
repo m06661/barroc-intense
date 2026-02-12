@@ -1,89 +1,152 @@
-@extends('layouts.guest')
+@extends($feedback ? 'layouts.guest' : 'layouts.app')
 
 @section('content')
-    <div class="min-h-screen bg-gradient-to-br from-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-        <div class="max-w-md mx-auto bg-white rounded-lg shadow-lg p-8">
-            <!-- Header -->
-            <div class="text-center mb-8">
-                <h1 class="text-3xl font-bold text-gray-900">⭐ Uw feedback</h1>
-                <p class="text-gray-600 mt-2">Helpt u ons beter te worden?</p>
-            </div>
+    <div class="container mx-auto px-4 py-8">
+        <div class="max-w-2xl mx-auto">
 
-            <!-- Machine Details -->
-            <div class="mb-8 p-4 bg-gray-50 rounded-lg border border-gray-200">
-                <h2 class="font-semibold text-gray-900 mb-3 text-sm">Machine Details</h2>
-                <dl class="space-y-2 text-sm">
-                    <div class="flex justify-between">
-                        <dt class="text-gray-600">Type:</dt>
-                        <dd class="font-medium text-gray-900">{{ $feedback->machine?->type ?? 'N/A' }}</dd>
-                    </div>
-                    <div class="flex justify-between">
-                        <dt class="text-gray-600">Serienummer:</dt>
-                        <dd class="font-medium text-gray-900">{{ $feedback->machine?->serial_number ?? 'N/A' }}</dd>
-                    </div>
-                    <div class="flex justify-between">
-                        <dt class="text-gray-600">Technicus:</dt>
-                        <dd class="font-medium text-gray-900">{{ $feedback->technician?->name ?? 'N/A' }}</dd>
-                    </div>
-                </dl>
-            </div>
+            <h1 class="text-3xl font-bold mb-6 text-gray-900">
+                {{ $feedback ? 'Give Feedback' : 'Create Feedback Request' }}
+            </h1>
 
-            <!-- Form -->
-            <form action="{{ route('feedback.store', $feedback->id) }}" method="POST" class="space-y-6">
-                @csrf
+            <div class="bg-white rounded-lg shadow-md p-8">
 
-                <!-- Rating -->
-                <div>
-                    <label class="block text-sm font-medium text-gray-900 mb-4">
-                        Hoe tevreden bent u met onze service?
-                    </label>
-                    <div class="flex gap-3 justify-center">
-                        @for ($i = 1; $i <= 5; $i++)
-                            <label class="cursor-pointer group">
-                                <input type="radio" name="score" value="{{ $i }}" class="hidden peer" required>
-                                <span class="text-5xl peer-checked:text-yellow-400 text-gray-300 hover:text-yellow-300 transition duration-200 block">
-                                ★
-                            </span>
+                <form id="feedback-form"
+                      action="{{ $feedback ? route('feedback.store', $feedback->id) : route('feedback.request.store') }}"
+                      method="POST"
+                      class="space-y-6">
+                    @csrf
+
+                    @if ($feedback)
+                        <!-- READ ONLY machine -->
+                        <div class="bg-gray-50 p-4 rounded-lg border border-gray-100">
+                            <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Machine</p>
+                            <p class="font-semibold text-gray-900">
+                                {{ $feedback->machine?->type ?? 'Unknown machine' }}
+                            </p>
+                            <p class="text-sm text-gray-600 mt-1">
+                                Serial: <span class="font-mono text-gray-800">{{ $feedback->machine?->serial_number ?? 'N/A' }}</span>
+                            </p>
+
+                            <div class="mt-4 pt-4 border-t border-gray-200">
+                                <p class="text-xs uppercase tracking-wide text-gray-500 mb-1">Monteur</p>
+                                <p class="font-semibold text-gray-900">
+                                    {{ $feedback->technician?->name ?? '—' }}
+                                </p>
+                                @if($feedback->technician?->region)
+                                    <p class="text-sm text-gray-600 mt-1">
+                                        Regio: <span class="font-mono text-gray-800">{{ $feedback->technician->region }}</span>
+                                    </p>
+                                @endif
+                            </div>
+                        </div>
+
+
+                        <!-- Rating -->
+                        <div>
+                            <label class="block text-sm font-medium text-gray-900 mb-4">
+                                Rate your experience (1–5)
                             </label>
-                        @endfor
+
+                            <div class="flex gap-3 justify-center">
+                                @for ($i = 1; $i <= 5; $i++)
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="score" value="{{ $i }}" class="hidden peer"
+                                            {{ (int)old('score') === $i ? 'checked' : '' }}>
+                                        <span class="text-5xl peer-checked:text-yellow-400 text-gray-300 hover:text-yellow-300">
+                                            ★
+                                        </span>
+                                    </label>
+                                @endfor
+                            </div>
+
+                            @error('score')
+                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Comments -->
+                        <div>
+                            <label for="comments" class="block text-sm font-medium text-gray-900 mb-2">
+                                Comments (optional)
+                            </label>
+
+                            <textarea
+                                id="comments"
+                                name="comments"
+                                rows="4"
+                                maxlength="1000"
+                                class="w-full border border-gray-300 rounded-lg px-4 py-2"
+                                placeholder="Share your feedback...">{{ old('comments') }}</textarea>
+
+                            @error('comments')
+                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                    @else
+                        <!-- Machine selection -->
+                        <div>
+                            <label for="machine_id" class="block text-sm font-medium text-gray-900 mb-2">
+                                Select Machine
+                            </label>
+
+                            <select id="machine_id" name="machine_id" required
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                                <option value="">-- Choose a machine --</option>
+                                @foreach(($machines ?? []) as $machine)
+                                    <option value="{{ $machine->id }}" {{ old('machine_id') == $machine->id ? 'selected' : '' }}>
+                                        {{ $machine->type }} — {{ $machine->serial_number }}
+                                        @if($machine->location) ({{ $machine->location }}) @endif
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @error('machine_id')
+                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <!-- Technician selection -->
+                        <div>
+                            <label for="technician_id" class="block text-sm font-medium text-gray-900 mb-2">
+                                Assign Technician
+                            </label>
+
+                            <select id="technician_id" name="technician_id" required
+                                    class="w-full border border-gray-300 rounded-lg px-4 py-2">
+                                <option value="">-- Choose a technician --</option>
+                                @foreach(($technicians ?? []) as $tech)
+                                    <option value="{{ $tech->id }}" {{ old('technician_id') == $tech->id ? 'selected' : '' }}>
+                                        {{ $tech->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+
+                            @error('technician_id')
+                            <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
+                            @enderror
+                        </div>
+
+                        <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 text-sm text-blue-800">
+                            Dit maakt een <strong>pending</strong> feedback request aan. De klant vult later score en comments in via de link.
+                        </div>
+                    @endif
+
+                    <div class="flex gap-4">
+                        <button type="submit"
+                                class="flex-1 bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg">
+                            {{ $feedback ? 'Submit Feedback' : 'Create Request' }}
+                        </button>
+
+                        <a href="{{ route('feedback.index') }}"
+                           class="flex-1 bg-gray-400 hover:bg-gray-500 text-white font-bold py-3 rounded-lg text-center">
+                            Cancel
+                        </a>
                     </div>
-                    @error('score')
-                    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                    @enderror
-                </div>
 
-                <!-- Comments -->
-                <div>
-                    <label for="comments" class="block text-sm font-medium text-gray-900 mb-2">
-                        Opmerkingen (optioneel)
-                    </label>
-                    <textarea
-                        id="comments"
-                        name="comments"
-                        rows="4"
-                        maxlength="1000"
-                        class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent resize-none"
-                        placeholder="Deel uw ervaringen met ons..."
-                    ></textarea>
-                    <p class="text-xs text-gray-500 mt-1">Max. 1000 karakters</p>
-                    @error('comments')
-                    <p class="text-red-500 text-sm mt-2">{{ $message }}</p>
-                    @enderror
-                </div>
+                </form>
 
-                <!-- Submit -->
-                <button
-                    type="submit"
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg transition duration-200 shadow-md hover:shadow-lg"
-                >
-                    Feedback verzenden
-                </button>
-            </form>
-
-            <!-- Footer -->
-            <p class="text-xs text-gray-500 text-center mt-6">
-                Dit bericht is automatisch gegenereerd. Uw privacy is voor ons belangrijk.
-            </p>
+            </div>
         </div>
     </div>
 @endsection

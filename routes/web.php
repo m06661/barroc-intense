@@ -8,7 +8,6 @@ use App\Http\Controllers\CategoryController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\CustomerDocumentController;
-use App\Models\Customer;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\SearchController;
 use App\Http\Controllers\RoleController;
@@ -114,10 +113,17 @@ Route::middleware('auth')->prefix('leases')->name('leases.')->group(function () 
 // Feedback routes
 // ------------------------------
 Route::get('/feedback', [FeedbackController::class, 'index'])->name('feedback.index');
-Route::get('/feedback/new', [FeedbackController::class, 'new'])->name('feedback.new');  // ← Nieuwe route
-Route::get('/feedback/{feedback}', [FeedbackController::class, 'create'])->name('feedback.create');
-Route::post('/feedback/{feedback}', [FeedbackController::class, 'store'])->name('feedback.store');
-Route::get('/feedback/{feedback}/thanks', [FeedbackController::class, 'thankYou'])->name('feedback.thankyou');
+
+// Create request (hergebruikt feedback.create view)
+Route::get('/feedback/request', [FeedbackController::class, 'requestCreate'])->name('feedback.request.create');
+Route::post('/feedback/request', [FeedbackController::class, 'requestStore'])->name('feedback.request.store');
+
+// Existing request -> give feedback
+Route::get('/feedback/{feedback}', [FeedbackController::class, 'create'])->whereNumber('feedback')->name('feedback.create');
+Route::post('/feedback/{feedback}', [FeedbackController::class, 'store'])->whereNumber('feedback')->name('feedback.store');
+Route::get('/feedback/{feedback}/thanks', [FeedbackController::class, 'thankYou'])->whereNumber('feedback')->name('feedback.thankyou');
+Route::get('/feedback/{feedback}/review', [FeedbackController::class, 'review'])->name('feedback.review');
+
 // ------------------------------
 // Issue Routes
 // ------------------------------
