@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -10,7 +11,7 @@ class Feedback extends Model
 {
     use HasFactory;
 
-    protected $table = 'feedback';
+    protected $table = 'feedback'; // laat zo als je tabel echt 'feedback' heet
 
     protected $fillable = [
         'customer_id',
@@ -20,11 +21,13 @@ class Feedback extends Model
         'score',
         'comments',
         'feedback_requested_at',
+        'submitted_at', // <-- handig als je dit veld hebt / wilt
     ];
 
     protected $casts = [
         'score' => 'integer',
         'feedback_requested_at' => 'datetime',
+        'submitted_at' => 'datetime',
         'created_at' => 'datetime',
         'updated_at' => 'datetime',
     ];
@@ -39,21 +42,20 @@ class Feedback extends Model
         return $this->belongsTo(Order::class);
     }
 
-    public function technician(): BelongsTo
+    // BELANGRIJK: technician hoort meestal een User te zijn
+    public function technician()
     {
-        return $this->belongsTo(Technician::class);
+        return $this->belongsTo(\App\Models\Technician::class, 'technician_id');
     }
+
 
     public function machine(): BelongsTo
     {
         return $this->belongsTo(Machine::class);
     }
 
-    /**
-     * Check of feedback al is gegeven
-     */
     public function isFeedbackGiven(): bool
     {
-        return $this->score !== null;
+        return !is_null($this->score);
     }
 }
