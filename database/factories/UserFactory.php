@@ -35,6 +35,14 @@ class UserFactory extends Factory
     /**
      * Indicate that the model's email address should be unverified.
      */
+    public function technician(): static
+    {
+        return $this->state(fn (array $attributes) => [
+            'name' => fake()->name(),
+            'email' => fake()->unique()->safeEmail(),
+        ]);
+    }
+
     public function unverified(): static
     {
         return $this->state(fn (array $attributes) => [

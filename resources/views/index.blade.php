@@ -45,7 +45,7 @@
             <a href="{{ route('contact') }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg mx-2">
                 Contacteer ons
             </a>
-            <a href="{{ route('products.index') }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg mx-2">
+            <a href="{{ route('dashboard') }}" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-lg shadow-lg mx-2">
                 Bekijk ons aanbod
             </a>
         </div>
